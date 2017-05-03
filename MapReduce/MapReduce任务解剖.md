@@ -87,7 +87,15 @@ MapTask请求的container尝试去利用本地的map split，也就是说尝试�
 
 map任务的执行阶段通过Mapper类的run方法执行。用户可以去重写它，但是默认情况下它将通过调用setup方法开始，setup方法默认情况下不会做一些有用的事，但是用户可以为了设置Task而去重写它(比如：初始化类的变量)。在setup方法被调用之后，map split文件中的每一个(key, value) tuple都会触发map()方法的执行。因此，map()方法接受一个key、一个value和一个mapper context作为参数。使用context，map任务会存储它的输出到buffer中。  
 
-注意：map split
+注意：map split是一块接着一块的被获取(例如：64KB)并且每个块会被分割成多个(key, value) tuple(例如：使用SplitLineReader.class).这个动作是在Mapper.Context.nextKeyValue方法内完成的。  
 
+当map split都被处理完成了，run方法内部会调用clean方法，默认情况下，clean内没有任何动作会被执行，但是用户可以决定是否需要重写这个方法。  
 
 #### MapTask：SPILLING  
+就如EXECUTING阶段所看见的一样，map会将它的ouput写入到一个环形内存缓冲区(MapTask.MapOutputBuffer).缓冲区的大小是确定的，由配置参数ma pmapreduce.task.io.sort.mb决定(默认是100MB)。  
+
+每当这个环形内存缓冲区差不多要满的时候(默认：mapreduce.map.sort.spill.percent 80%), SPILLING阶段就会被执行(使用一个独立的线程并行的执行)。如果spilling线程很慢并且缓冲区被装满达到了100%，那么map()任务将不会被执行并且不得不等待。  
+
+SPILLING线程会执行下面的动作：
+1. 它会创建一个SpillReader和FSOutputStream(本地文件系统)
+2. 
