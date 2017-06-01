@@ -105,7 +105,7 @@ SPILLING线程会执行下面的动作：
 #### 有多少Reduce任务？  
 job中的Reduce任务的数量是由mapreduce.job.reduces配置参数决定的。  
 
-####与输出tuple相关联的partitionIdx是什么？
+#### 与输出tuple相关联的partitionIdx是什么？
 一个输出tuple的partitionIdx是一个分区的索引。它是由Mapper.Context.write()确定的：  
 ```java
 partitionIdx = (key.hashCode() & Integer.MAX_VALUE) % numReducers
