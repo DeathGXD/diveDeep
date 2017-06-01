@@ -98,4 +98,36 @@ map任务的执行阶段通过Mapper类的run方法执行。用户可以去重�
 
 SPILLING线程会执行下面的动作：
 1. 它会创建一个SpillReader和FSOutputStream(本地文件系统)
-2. 
+2. 在内存中对缓冲区中使用的块进行排序：输出的tuples通过(partitionIdx, key)使用快速排序算法进行排序
+3. 排序后的输出会以分区为单位进行分割：job中的每个Reduce任务对应着一个分区
+4. 分割后的分区数据会被连续的写入到本地文件中  
+
+#### 有多少Reduce任务？  
+job中的Reduce任务的数量是由mapreduce.job.reduces配置参数决定的。  
+
+####与输出tuple相关联的partitionIdx是什么？
+一个输出tuple的partitionIdx是一个分区的索引。它是由Mapper.Context.write()确定的：  
+```java
+partitionIdx = (key.hashCode() & Integer.MAX_VALUE) % numReducers
+```  
+它是作为输出tuple的元数据与输出tuple一起被存储在环形内存缓冲区中。用户可以自定义分区器通过设置mapreduce.job.partitioner.class参数。  
+#### 我们何时使用combiner？
+如果用户指定了一个combiner，那么SPILLING线程在将输出tuple写入到文件中之前，会先在tuple中的每个分区执行combiner。主要会进行如下操作：  
+1. 创建一个用户的Reduce.class实例(一个特定的实例用来combiner)
+2. 创建一个Reduce.Context：输出文件将会被存储在本地文件系统
+3. 执行Reduce.run()  
+
+combiner使用的是与标准的reduce函数相同的实现，因此可以将combiner看做是本地的reducer(map端的reduce)。  
+
+### MapTask：执行结束
+在执行阶段的结束，SPILLING线程最后将会被触发。更多细节：  
+1. 排序和分割剩下的没有被spill的tuple
+2. 开始SHUFFLE阶段  
+
+注意：每次缓冲区几乎要满的时候，我们会生成一个spill文件(SpillRecord + 输出文件)。每个spill文件会包含多个分区(segments)。  
+
+#### MapTask：SHUFFLE
+
+### Reduce阶段
+
+### YARN与MapReduce交互
