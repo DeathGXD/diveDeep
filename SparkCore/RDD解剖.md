@@ -11,13 +11,13 @@ RDD主要包含五个特性：</br>
 
 ###  1.RDD的分区列表
   
-  ![Alt text](/Images/RDD.png)
+  ![Alt text](/SparkCore/Images/RDD.png)
 
   RDD是一个分区的数据集合，倒不如说RDD就是一个包含多个分区数据的分区集合。由上图可以看出，一个RDD包含多个分区。再看RDD源码：  
   ```scala
   protected def getPartitions: Array[Partition]  
   ```  
-  
+
   RDD分区的多少涉及到对这个RDD计算的并行度。所以RDD的分区是非常重要的。
   RDD中一个分区对应着一个inputSplit或者说是一个block，所以RDD的分区个数只与数据的block的个数相关。我们可以查看源码：  
   ```scala
@@ -44,7 +44,7 @@ RDD主要包含五个特性：</br>
   ```  
   从上面源码可以看出，RDD的默认分区为defaultParallelism和2的最小值，也就是说RDD的默认分区不允许超过2。从注释可以看出在
   (https://github.com/mesos/spark/pull/718)
-  讨论了这么设计的原因。那么defaultParallelism的值是从哪里来的呢？继续跟进源码 
+  讨论了这么设计的原因。那么defaultParallelism的值是从哪里来的呢？继续跟进源码
   ```scala
   /** Default level of parallelism to use when not given by user (e.g. parallelize and makeRDD). */
   def defaultParallelism: Int = {
@@ -66,7 +66,7 @@ RDD主要包含五个特性：</br>
   ```
   OK，到现在为止终于看到设置defaultParallelism的参数了，是spark.default.parallelism，如果没有设置spark.default.parallelism，那么取当时
   executor所在机器的CPU核数与2的最大值，一般都应该大于2才对。
-  
+
   从上面代码看出不管是取CPU核数，还是设置spark.default.parallelism参数，最后在SparkContext内部都会设置为不大于2的defaultMinPartitions,可
   以在显示的指定RDD分区数，进而覆盖defaultMinPartitions的值。那么显示指定的分区数真的有用吗？我们继续查看RDD的getPartitions，由于RDD是一个抽
   象类，所以我们要去实现类中查看，这里我们查看HadoopRDD。HadoopRDD的getPartitions方法实现如下:  
@@ -112,4 +112,3 @@ RDD主要包含五个特性：</br>
 ###  4.RDD的分区计算函数
 
 ###  5.RDD的分区函数
-
