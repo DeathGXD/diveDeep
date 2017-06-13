@@ -128,6 +128,9 @@ combiner使用的是与标准的reduce函数相同的实现，因此可以将com
 
 #### MapTask：SHUFFLE
 
-### Reduce阶段
+### Reduce阶段  
+#### ReduceTask启动  
+MRAppMaster等到mapreduce.job.reduce.slowstart.completedmaps(5%)MapTask完成之后，那么ReduceTask会定期的执行:  
+
 
 ### YARN与MapReduce交互
