@@ -23,11 +23,11 @@ shift
 ```  
 ......  
 
-###有图有真相  
+### 有图有真相  
 具体代码分析之前，我们先来看一张比较直观的NameNode的启动流程图：  
 ![image](/HDFS/Images/hdfs-namenode-start.png)
 
-下面我们再具体的分析NameNode的启动流程的源码。  
+下面我们再具体的分析NameNode的启动的源码。  
 
 ### 一切从main函数开始  
 main函数是程序的入口，NameNode也不例外。那么我们先从NameNode的main函数看起。  
