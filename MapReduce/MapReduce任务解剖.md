@@ -4,7 +4,7 @@
 * Map阶段：多个Map任务被执行
 * Reduce阶段：多个Reduce任务被执行  
 
-注意：Reduce阶段可能在Map阶段结束之前就被执行。因此，Map任何和Reduce任务之间可能存在交叉。  
+注意：Reduce阶段可能在Map阶段结束之前就被执行。因此，Map任务和Reduce任务之间可能存在交叉。  
 
 ### Map阶段  
 我们现在将我们讨论的焦点放在Map阶段。对此，一个关键的决策是Application Master需要给当前的任务启动多少个MapTask。  
