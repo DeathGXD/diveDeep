@@ -47,16 +47,3 @@ ResourceManager有两个核心的组件：调度器(Scheduler)和应用管理器
 
 
 ### Container  
-
-
-
-
-
-
-
-
-
-
-
-
-YARN的基本架构就介绍到这里。
