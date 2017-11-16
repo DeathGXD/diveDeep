@@ -22,3 +22,6 @@ Netty中有编解码器的概念(编码器和解码器)。Netty编解码器可�
 Netty编解码器其实只是一个(或者两个)ChannelHandler的实现。一个编解码器通常由一个ChannelInboundHandler实现和一个ChannelOutboundHandler实现组成，ChannelInboundHandler负责将请求字节转换为对象，ChannelOutboundHandler负责将响应对象转换为字节。  
 
 Netty自带了几个不同协议的编解码器，像HTTP、WebSockets、SSL/TLS等等。为了在Netty中使用那些协议，您必须将相应协议编解码器的 ChannelInboundHandler和ChannelOutboundHandler添加到你想要使用该协议的SocketChannel的ChannelPipeline中。  
+
+原文链接：  
+http://tutorials.jenkov.com/netty/netty-channelpipeline.html
