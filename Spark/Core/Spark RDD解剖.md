@@ -10,7 +10,7 @@ RDD主要包含五个特性：</br>
 下面通过源码具体分析RDD五个特性的原理：
 
 ###  1.RDD的分区列表  
-![Alt text](/SparkCore/Images/RDD.png)  
+![Alt text](/Spark/Images/RDD.png)  
 
 RDD是一个分区的数据集合，倒不如说RDD就是一个包含多个数据分区记录的集合。由上图可以看出，一个RDD包含多个分区。再看RDD源码：  
 ```scala

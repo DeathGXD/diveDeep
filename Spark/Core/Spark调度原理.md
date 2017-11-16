@@ -1,5 +1,5 @@
 
-![image](/SparkCore/Images/Spark-Architecture.png)
+![image](/Spark/Images/Spark-Architecture.png)
 
 
 ### Spark核心组件  

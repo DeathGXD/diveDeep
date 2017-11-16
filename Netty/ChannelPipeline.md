@@ -1,0 +1,24 @@
+ChannelPipeline是Netty中非常核心概念。Netty中每一个SocketChannel都包含一个ChannelPipeline。而ChannelPipeline中包含一系列ChannelHandler的实例。当数据进出SocketChannel时，ChannelHandler实例会被调用。  
+
+ChannelHandler接口有两个子接口，它们是：  
+* ChannelInboundHandler
+* ChannelOutboundHandler  
+
+你可以将ChannelInboundHandler和ChannelOutboundHandler实例都添加到ChannelPipeline中。下图说明了ChannelPipeline中带有ChannelInboundHandler和ChannelOutboundHandler实例：  
+![image](/Netty/Images/netty-channelpipeline-with-channelhandler.png)  
+
+当从SocketChannel接受数据时，数据会被传到ChannelPipeline中第一个ChannelInboundHandler。ChannelInboundHandler会对数据进行处理，处理完成后数据会被传到ChannelPipeline中的下一个ChannelInboundHandler。  
+
+事实上，ChannelInboundHandler在将它接受到数据传递到ChannelPipeline中下一个handler之前，可以对数据进行转换。例如，原始字节可以被转换为HTTP对象，或者其他一些对象。那么ChannelPipeline中的下一个handler看到的将会是HTTP对象，而不是原始字节。  
+
+当将数据写回到SocketChannel时，会以与接收数据相同的形式。数据从ChannelPipeline中的一个ChannelOutboundHandler到另一个ChannelOutboundHandler，直到到达SocketChannel。ChannelOutboundHandler在处理数据的过程中同样可以对数据进行转换。  
+
+尽管图中展示的ChannelInboundHandler和ChannelOutboundHandler实例都是作为单独的列表，但是实际上它们都位于同一个列表中(pipeline)。因此，如果一个ChannelInboundHandler决定写回一些数据到SocketChannel，数据会经过ChannelPipeline中所有位于正在写数据的ChannelInboundHandler之前的ChannelOutboundHandler实例。如图所示：  
+![image](/Netty/Images/netty-channelpipeline-with-channelhandler2.png)  
+
+### 编解码器  
+Netty中有编解码器的概念(编码器和解码器)。Netty编解码器可以将字节转换为消息对象(Java对象)，或者将消息对象转换为字节。比如，编解码器可以将接受到的HTTP请求的原始字节转换为HTTP对象，或者将HTTP响应对象转换为原始字节。  
+
+Netty编解码器其实只是一个(或者两个)ChannelHandler的实现。一个编解码器通常由一个ChannelInboundHandler实现和一个ChannelOutboundHandler实现组成，ChannelInboundHandler负责将请求字节转换为对象，ChannelOutboundHandler负责将响应对象转换为字节。  
+
+Netty自带了几个不同协议的编解码器，像HTTP、WebSockets、SSL/TLS等等。为了在Netty中使用那些协议，您必须将相应协议编解码器的 ChannelInboundHandler和ChannelOutboundHandler添加到你想要使用该协议的SocketChannel的ChannelPipeline中。  
