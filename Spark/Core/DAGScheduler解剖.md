@@ -1,1 +1,5 @@
-DAG是Spark实现的面向Stage的调度。
+DAG是Spark实现的面向Stage的调度层。它会将一个逻辑执行计划(RDD通过转换构建的lineage依赖)转换为物理执行计划。  
+
+在一个action操作被调用之后，SparkContext会发出一个逻辑计划给DAGScheduler，它反过来会转化为一个组stage，作为TaskSet提交用于执行。  
+
+DAGScheduler中核心的概念是job和stage，它通过内部的注册器和计数器进行跟踪。  
