@@ -73,7 +73,7 @@ def textFile(
 */
 def defaultMinPartitions: Int = math.min(defaultParallelism, 2)
 ```  
- 从上面源码可以看出，RDD的默认分区为defaultParallelism和2的最小值，也就是说RDD的默认分区不允许超过2。从注释可以看出在(https://github.com/mesos/spark/pull/718)讨论了这么设计的原因。那么defaultParallelism的值是从哪里来的呢？继续跟进源码  
+ 从上面源码可以看出，RDD的默认分区为defaultParallelism和2的最小值，也就是说RDD的默认分区不允许超过2。从注释可以看出在(https://github.com/mesos/spark/pull/718) 讨论了这么设计的原因。那么defaultParallelism的值是从哪里来的呢？继续跟进源码  
 ```scala
 /** Default level of parallelism to use when not given by user (e.g. parallelize and makeRDD). */
 def defaultParallelism: Int = {
