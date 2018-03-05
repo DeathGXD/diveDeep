@@ -1,0 +1,6 @@
+### Stage是什么  
+Stage是物理的执行单元，它是物理执行计划中一个步骤。一个Stage由一组并行的task组成——每个task对应一个分区。换句话说，Spark中的job就是将计算切分成stage的计算任务。stage通过id进行唯一标识。当一个stage被创建，DAGScheduler会增长内部的计数器nextStageId来跟踪stage的提交数量。  
+
+一个stage仅仅可以工作于单独的RDD的partition上(通过rdd进行标识)，但是可以与其他多个依赖的父stage进行关联(通过内部的字段parents进行标识)，stage都有通过shuffle依赖进行标记的边界线。提交一个stage可以触发一系列该stage所依赖的父stage的执行。  
+
+最终，每个stage都会有一个firstJobId作为提交该stage的job的id。
